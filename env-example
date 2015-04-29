@@ -1,0 +1,9 @@
+GOOGLE_API_KEY="" # Fill in Google API Key here ..
+TEST_USER1_IC="" # Fill in a test IC to get data from EC
+TEST_USER1_POSTCODE="" # Fill in the main postcode to be tested
+TEST_USER1_ADDRESS="" # Fill in the main address to be tested; use the full; be as specific as possible
+TEST_USER2_IC="" # Fill in the alternative test IC to get data from EC
+TEST_USER2_ADDRESS="" # Fill in the alternative postcode to be tested
+TEST_USER2_POSTCODE=""  # Fill in the alternative address to be tested; use the full; be as specific as possible
+TEST_USER_OLDIC = "" # Fill in with original old IC format
+
