@@ -103,6 +103,8 @@ foreach ($mapit_results as $mapit_id => $mapit_result) {
     switch ($mapit_result['type']) {
         case 'PAR':
             // Extract out PAR
+            //$mypar = "http://mapit.sinarproject.org/area/$mapit_id.geojson";
+            //print_r($mypar);
             $coordinates = extractCoordinates($adapter->getContent("http://mapit.sinarproject.org/area/$mapit_id.geojson"));
             // Fill it into content structure?? from the coordinates section ..
             break;
@@ -221,7 +223,7 @@ MYHTML;
 echo $finalized_html;
 
 function extractCoordinates($geojson_output) {
-    // var_dump($geojson_output);
+    //var_dump($geojson_output);
     $geojson_array = json_decode($geojson_output, true);
     // die("Ack!");
     return json_encode($geojson_array['coordinates']);

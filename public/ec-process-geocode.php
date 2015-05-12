@@ -21,7 +21,7 @@ $geocoder = new \Geocoder\Geocoder();
 $adapter = new \Geocoder\HttpAdapter\CurlHttpAdapter();
 
 // To be loaded in via configurations??
-$apiKey = getenv('GOOGLE_API_KEY');
+$apiKey = $_ENV['GOOGLE_API_KEY'];
 // echo "API Key is $apiKey";
 $geocoder->registerProvider(new \Geocoder\Provider\GoogleMapsProvider($adapter, null, "my", true, $apiKey));
 

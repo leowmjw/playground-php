@@ -22,21 +22,18 @@ $geotools = new \League\Geotools\Geotools();
 $geocoder->registerProvider(new \Geocoder\Provider\GoogleMapsProvider($adapter, null, "my", true, $apiKey));
 
 $mypostcode = $_ENV['TEST_USER1_POSTCODE'];
-$myaddress = $_ENV['TEST_USER1_POSTCODE'];
+$myaddress = $_ENV['TEST_USER1_ADDRESS'];
 $myic = $_ENV['TEST_USER1_IC'];
-$voter = new EC\Voter(new EC\ECSite($myic), new EC\VoterLocation($geocoder, $mypostcode, $myaddress));
+// Testing wth dummy
+$voter = new EC\Voter(new EC\ECSiteDummy($myic), new EC\VoterLocation($geocoder, $mypostcode, $myaddress));
+// Real
+// $voter = new EC\Voter(new EC\ECSite($myic), new EC\VoterLocation($geocoder, $mypostcode, $myaddress));
+
+// Try the auto toString ..
+echo nl2br($voter);
 
 // Data from Mapit
 $mapit = new EC\MapIt();
-// var_dump($mapit->getDetails());
-$mybob = $mapit->getDetails();
-// var_dump($mybob);
-foreach ($mybob as $key => $value) {
-    echo "Key: $key Value: $value  <br/>";
-}
-//$mysam = print_r($mybob,true);
-//nl2br($mysam);
-// Data from EC
 
 try {
     $results = $geotools->batch($geocoder)->geocode($voter->getLocations())->parallel();

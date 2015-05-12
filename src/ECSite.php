@@ -92,6 +92,7 @@ class ECSite implements ECSiteInterface {
             }
         }
 
+        // die(print_r($voter_details));
         return $voter_details;
     }
 
