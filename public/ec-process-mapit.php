@@ -25,9 +25,9 @@ $mypostcode = $_ENV['TEST_USER1_POSTCODE'];
 $myaddress = $_ENV['TEST_USER1_ADDRESS'];
 $myic = $_ENV['TEST_USER1_IC'];
 // Testing wth dummy
-$voter = new EC\Voter(new EC\ECSiteDummy($myic), new EC\VoterLocation($geocoder, $mypostcode, $myaddress));
+$voter = new EC\Voter(new EC\ECSiteDummy($myic), new EC\VoterLocation($mypostcode, $myaddress));
 // Real
-// $voter = new EC\Voter(new EC\ECSite($myic), new EC\VoterLocation($geocoder, $mypostcode, $myaddress));
+// $voter = new EC\Voter(new EC\ECSite($myic), new EC\VoterLocation($mypostcode, $myaddress));
 
 // Try the auto toString ..
 echo nl2br($voter);
@@ -37,14 +37,19 @@ $mapit = new EC\MapIt();
 
 try {
     $results = $geotools->batch($geocoder)->geocode($voter->getLocations())->parallel();
+    echo "Number of results: " . count($results) . "<br/><br/>";
+    // TODO: count nuebr of results back??
+    // If no result; invoke ?? $voter->getBackupLocations();
 } catch (Exception $ex) {
     die($ex->getMessage());
 }
 // Dump out the needed MapIt URLs ..
 foreach ($results as $result) {
     if ('' == $result->getExceptionMessage()) {
-        // Execute JSON for the point
-        $mapit->getMapItPoint($result);
+        // Extract out what is needed ..
+        $mapit->extractMapIt($result);
+        // Output structure
+        echo $mapit;
     } else {
         echo $result->getExceptionMessage();
     }

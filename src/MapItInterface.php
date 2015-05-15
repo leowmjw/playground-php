@@ -9,11 +9,13 @@ namespace EC;
  */
 interface MapItInterface {
 
+    public function getMapItViewModel($output_json = false);
+
     public function getPARPolygons();
 
     public function getDUNPolygons();
 
     public function getDMPolygons();
 
-    public function getMapItPoint(\Geocoder\Result\ResultInterface $result);
+    public function extractMapIt(\Geocoder\Result\ResultInterface $result);
 }

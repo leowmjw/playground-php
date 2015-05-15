@@ -12,6 +12,8 @@ class Voter {
     //put your code here
     private $voter_detail_array = null;
     private $voter_locations_array = null;
+    private $voter_backup_locations_array = null;
+    private $voter_locations = null;
 
     public function __construct(\EC\ECSiteInterface $ec_site, \EC\VoterLocationInterface $voter_locations) {
         // Attach details
@@ -25,6 +27,14 @@ class Voter {
         if (null === $this->voter_locations_array) {
             // How to validate
             $this->voter_locations_array = $voter_locations->getPossibleAddresses();
+        }
+        // Attach backup locations
+        if (null === $this->voter_backup_locations_array) {
+            // How to validate
+            $this->voter_backup_locations_array = $voter_locations->getBackupAddresses();
+        }
+        if (null == $this->voter_locations) {
+            $this->voter_locations = $voter_locations;
         }
     }
 
@@ -51,11 +61,17 @@ class Voter {
     public function getLocations() {
         return $this->voter_locations_array;
     }
+    
+    public function getBackupLocations() {
+        // This is a better way?  rather than attacj the arrays??
+        return $this->voter_locations->getBackupAddresses();
+    }
 
     protected function debugVoterDetails() {
         $debug_output = "";
         $debug_output .= "DETAILS: " . print_r($this->voter_detail_array, true) . "\n";
         $debug_output .= "LOCATIONS: " . print_r($this->voter_locations_array, true) . "\n";
+        $debug_output .= "BACKUP LOCATIONS: " . print_r($this->voter_backup_locations_array, true) . "\n";
         return $debug_output;
     }
 

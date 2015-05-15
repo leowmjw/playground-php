@@ -9,18 +9,21 @@ namespace EC;
  */
 class VoterLocation implements VoterLocationInterface {
 
-    private $geocoder = null;
     private $postcode = null;
     private $address = null;
     private $possible_addresses = array();
+    private $backup_addresses = array();
 
-    public function __construct(\Geocoder\GeocoderInterface $geocoder, $postcode, $address = null) {
-        $this->geocoder = $geocoder;
+    public function __construct($postcode, $address = null) {
         $this->postcode = $postcode;
         $this->address = $address;
-        $this->possible_addresses[] = $this->postcode;
         if (!empty($this->address)) {
+            $this->backup_addresses[] = $this->postcode;
             $this->possible_addresses[] = $this->address . (($this->postcode) ? ", " . $this->postcode : '');
+        } else {
+            // For simplification; just choose as specific ..
+            // leave the other to backup address ..
+            $this->possible_addresses[] = $this->postcode;
         }
     }
 
@@ -37,14 +40,11 @@ class VoterLocation implements VoterLocationInterface {
     }
 
     public function getPossibleAddresses() {
-        $possible_addresses = array();
-        if (!empty($this->postcode)) {
-            $possible_addresses[] = $this->postcode;
-        }
-        if (!empty($this->address)) {
-            $possible_addresses[] = $this->address . (($this->postcode) ? ", " . $this->postcode : '');
-        }
-        return $possible_addresses;
+        return $this->possible_addresses;
+    }
+
+    public function getBackupAddresses() {
+        return $this->backup_addresses;
     }
 
     public function getPossiblePoints() {
@@ -53,11 +53,6 @@ class VoterLocation implements VoterLocationInterface {
 
     public function getPointsLngLat() {
         
-    }
-    // Protected items ..
-    protected function dumpMapitUrl(ResultInterface $result) {
-        $sinar_mapit_base_url = "http://mapit.sinarproject.org/point/4326/";
-        return $sinar_mapit_base_url . $result->getLongitude() . "," . $result->getLatitude();
     }
 
 }
