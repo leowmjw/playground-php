@@ -12,4 +12,6 @@ interface CompareInterface {
     public function view();
     
     public function getJSSnippet();
+    
+    public function render($display);
 }

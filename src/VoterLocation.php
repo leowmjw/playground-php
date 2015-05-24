@@ -15,7 +15,8 @@ class VoterLocation implements VoterLocationInterface {
     private $backup_addresses = array();
 
     public function __construct($postcode, $address = null) {
-        $this->postcode = $postcode;
+        // Postcode must be number only ..!
+        $this->postcode = preg_replace("#[^0-9]#", "", $postcode);
         $this->address = $address;
         if (!empty($this->address)) {
             $this->backup_addresses[] = $this->postcode;
@@ -23,7 +24,9 @@ class VoterLocation implements VoterLocationInterface {
         } else {
             // For simplification; just choose as specific ..
             // leave the other to backup address ..
-            $this->possible_addresses[] = $this->postcode;
+            if (!empty($postcode)) {
+                $this->possible_addresses[] = $this->postcode;
+            }
         }
     }
 

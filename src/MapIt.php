@@ -30,15 +30,15 @@ class MapIt implements MapItInterface {
     }
 
     public function getDMPolygons() {
-        return $this->mapit_view_model['dm_polygon'];
+        return $this->mapit_view_model['dm']['polygon'];
     }
 
     public function getDUNPolygons() {
-        return $this->mapit_view_model['dun_polygon'];
+        return $this->mapit_view_model['dun']['polygon'];
     }
 
     public function getPARPolygons() {
-        return $this->mapit_view_model['par_polygon'];
+        return $this->mapit_view_model['par']['polygon'];
     }
 
     public function __toString() {
