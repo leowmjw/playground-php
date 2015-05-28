@@ -35,7 +35,11 @@ $myresponse = new Response();
 $router = new League\Route\RouteCollection;
 
 $router->get('/', function(Request $myrequest, Response $myresponse) use ($myrequest, $myresponse) {
-    $myresponse->setContent("In / <br/><br/> Data: " . print_r($myrequest->query->all(), true));
+    // $myresponse->setContent("In / <br/><br/> Data: " . print_r($myrequest->query->all(), true));
+    $mymessage = print_r($myrequest->query->all(), true);
+    $display['message'] = $mymessage;
+    $default_controller = new \EC\Controller();
+    $myresponse->setContent($default_controller->render($display));
     return $myresponse;
 });
 
@@ -59,18 +63,21 @@ $router->get('/compare', function(Request $myrequest, Response $myresponse) use 
     $display['input']['postcode'] = htmlentities($mypostcode);
     $display['input']['address'] = htmlentities($myaddress);
     // CReate the needed pre-reqs; any failure gets marked
-    $ec_site = new \EC\ECSiteDummy($myic);
+    // Dummy tests below; should be further to be injected in ..
+    // $ec_site = new \EC\ECSiteDummy($myic);
+    $ec_site = new \EC\ECSite($myic);
     if (empty($ec_site->getLabels())) {
         // Mark in UI structure
-        $display['input']['ic']['error'] = "Invalid Voter!!";
+        // var_dump($display);
+        $display['input']['error']['ic'] = "Invalid Voter!!";
         // Mark failed
         $prereqs_met = false;
     }
     $voter_location = new \EC\VoterLocation($mypostcode, $myaddress);
     if (empty($voter_location->getPossibleAddresses())) {
         // Mark in UI structure
-        $display['input']['postcode']['error'] = "Invalid postcode!!";
-        $display['input']['address']['error'] = "or address!!";
+        $display['input']['error']['postcode'] = "Invalid postcode!!";
+        $display['input']['error']['address'] = "or address!!";
         // Mark failed
         $prereqs_met = false;
     }
@@ -111,19 +118,22 @@ $router->get('/compare', function(Request $myrequest, Response $myresponse) use 
         // Array[dm][polygon]
         // Array[are][name]
         // Array[are][polygon]
+        // Setup ECSite, VoterLocation here
+        // Call the Compare controller ..
+        // Output the magic __toString from Controller class??
+        /*
+          $myresponse->setContent("In /compare <br/><br/> Data: " . print_r($myrequest->query->all(), true));
+         * 
+         */
+        // $myresponse->setContent("In /compare <br/><br/> Data: " . print_r($myrequest->query->all(), true) . "<br/><br/>" . $compare_controller);
+        $myresponse->setContent($compare_controller->render($display));
     } else {
         // Error condition
         $display['error'] = true;
+
+        $default_controller = new \EC\Controller();
+        $myresponse->setContent($default_controller->render($display));
     }
-    // Setup ECSite, VoterLocation here
-    // Call the Compare controller ..
-    // Output the magic __toString from Controller class??
-    /*
-      $myresponse->setContent("In /compare <br/><br/> Data: " . print_r($myrequest->query->all(), true));
-     * 
-     */
-    // $myresponse->setContent("In /compare <br/><br/> Data: " . print_r($myrequest->query->all(), true) . "<br/><br/>" . $compare_controller);
-    $myresponse->setContent($compare_controller->render($display));
     return $myresponse;
 });
 
@@ -139,7 +149,7 @@ try {
     echo $hexec->getMessage();
     echo "Ack; HTTP Exception!!";
 } catch (Exception $exc) {
-    echo $exc->getTraceAsString() . "<br/><br/>";
+    echo nl2br($exc->getTraceAsString()) . "<br/><br/>";
     // Some some page; based on what criteria; and strategy??
     echo "Ack; died!!";
 }

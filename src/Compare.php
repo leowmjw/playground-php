@@ -36,8 +36,9 @@ class Compare implements CompareInterface {
                 // echo "Number of results: " . count($results) . "<br/><br/>";
                 // TODO: count nuebr of results back??
                 // If no result; invoke ?? $voter->getBackupLocations();
-            } catch (Exception $ex) {
-                die($ex->getMessage());
+            } catch (\Exception $ex) {
+                // Any provider errors are NOT caught here; encapsulated inside BatchGeocoded already ..
+                die("Unknown Exception: " . $ex->getMessage());
             }
         }
     }
@@ -59,6 +60,11 @@ class Compare implements CompareInterface {
         //  ----> [par][polygon]
         //  ----> [par][name]
 
+        // Input variables ..
+        $myic = $display['input']['ic'];
+        $mypostcode = $display['input']['postcode'];
+        $myaddress = $display['input']['address'];
+        
         $finalized_polygon = $this->renderPolygon($display['output']['mapit']);
         $finalized_ec = $this->renderECDetail($display['output']['voter']);
         $finalized_mapit = $this->renderMapItDetail($display['output']['mapit']);
@@ -86,6 +92,14 @@ class Compare implements CompareInterface {
     <h2>EC Malaysia Checker</h2>
   </div>
   <div id="body">
+    <div>
+      <form type="get" action="/compare">
+        IC: <input type="text" name="ic" value="$myic" /> 
+        Postcode: <input type="text" name="postcode" value="$mypostcode" /> 
+        Address: <input type="text" name="address" value="$myaddress"/>
+        <input type="submit"/>
+      </form>
+    </div>                
     <h3>Parliament (PAR) + State Assembly (DUN) + Voting District (DM) Maps</h3>
     <div class="row">
       <div class="span11">
@@ -129,7 +143,8 @@ MYHTML;
                 $view['mapit'] = $mapit->getMapItViewModel();
                 return $view;
             } else {
-                echo $result->getExceptionMessage();
+                // var_dump($result);
+                // echo $result->getExceptionMessage();
             }
         }
     }
@@ -217,12 +232,16 @@ TEMPLATE;
         return $template;
     }
 
-    protected function renderECDetail($voter_details) {
+    protected function renderECDetail($voter_output) {
         // EC Data inside voter? {{ $display['output']['voter'] }}
         //  ----> [par]/[ic]..
-        $voter_details = "";
-        foreach ($voter_details as $key => $value) {
-            $voter_details .= "<br/> $key: $value";
+        if (empty($voter_output)) {
+            $voter_details = "<br/><br/>NO RESUTS!!";
+        } else {
+            $voter_details = "";
+            foreach ($voter_output as $key => $value) {
+                $voter_details .= "<br/> $key: $value";
+            }
         }
         // Loop through the data here ..
         // Use dumb output first ..
@@ -243,27 +262,34 @@ TEMPLATE;
     protected function renderMapItDetail($mapit_output) {
         // MapIt Data {{ $display['output']['mapit'] }}
         //  ----> [par][name]
-        $mapit_details = "";
-        foreach ($mapit_output as $type => $value) {
-            switch ($type) {
-                case 'par':
-                    $mapit_details .= "<br/> PAR: " . $value['name'];
-                    break;
-                case 'dun':
-                    $mapit_details .= "<br/> DUN: " . $value['name'];
-                    break;
-                case 'dm':
-                    $mapit_details .= "<br/> DM: " . $value['name'];
-                    break;
-                case 'are':
-                    $mapit_details .= "<br/> ARE: " . $value['name'];
-                    break;
+        if (empty($mapit_output)) {
+            $mapit_details = "<br/><br/>NO RESUTS!!";
+        } else {
+            $mapit_details = "";
+            foreach ($mapit_output as $type => $value) {
+                switch ($type) {
+                    case 'url':
+                        $mapit_details .= "<br/> URL: " . '<a href="' . $value['name'] . '" >' . $value['name'] . '</a>';
+                        break;                        
+                    case 'par':
+                        $mapit_details .= "<br/> PAR: " . $value['name'];
+                        break;
+                    case 'dun':
+                        $mapit_details .= "<br/> DUN: " . $value['name'];
+                        break;
+                    case 'dm':
+                        $mapit_details .= "<br/> DM: " . $value['name'];
+                        break;
+                    case 'are':
+                        $mapit_details .= "<br/> ARE: " . $value['name'];
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
+            // Loop through the data here ..
         }
-        // Loop through the data here ..
         // Use dumb output first ..
         $template = <<<TEMPLATE
     <h3>From Mapit</h3>

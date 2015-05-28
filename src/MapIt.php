@@ -132,7 +132,10 @@ class MapIt implements MapItInterface {
 
     protected function dumpMapitUrl(ResultInterface $result) {
         $sinar_mapit_base_url = "http://mapit.sinarproject.org/point/4326/";
-        return $sinar_mapit_base_url . $result->getLongitude() . "," . $result->getLatitude();
+        $sinar_mapit_url = $sinar_mapit_base_url . $result->getLongitude() . "," . $result->getLatitude();
+        // For debugging purposes; SEO too??
+        $this->mapit_view_model['url']['name'] = $sinar_mapit_url;
+        return $sinar_mapit_url;
     }
 
     protected function extractCoordinates($geojson_output) {
