@@ -59,12 +59,11 @@ class Compare implements CompareInterface {
         //  ----> [lat]/[lng]
         //  ----> [par][polygon]
         //  ----> [par][name]
-
         // Input variables ..
         $myic = $display['input']['ic'];
         $mypostcode = $display['input']['postcode'];
         $myaddress = $display['input']['address'];
-        
+
         $finalized_polygon = $this->renderPolygon($display['output']['mapit']);
         $finalized_ec = $this->renderECDetail($display['output']['voter']);
         $finalized_mapit = $this->renderMapItDetail($display['output']['mapit']);
@@ -181,7 +180,14 @@ MYHTML;
         // Use dumb output first ..
         $template = <<<TEMPLATE
   <script type="text/javascript">
+                
+    // Init variables for map
     var map;
+    var polygon;
+    var polygon_dun;
+    var polygon_dm;
+    var polygon_are;
+                
     $(document).ready(function(){
       map = new GMaps({
         div: '#map',
@@ -194,6 +200,16 @@ MYHTML;
       var paths_dm = $coordinates_dm;
       var paths_are = $coordinates_are;
 
+      polygon_are = map.drawPolygon({
+        paths: paths_are,
+        useGeoJSON: true,
+        strokeColor: '#ABBB17',
+        strokeOpacity: 1,
+        strokeWeight: 3,
+        fillColor: '#F3F756',
+        fillOpacity: 0.4
+      });
+
       polygon = map.drawPolygon({
         paths: paths,
         useGeoJSON: true,
@@ -201,7 +217,7 @@ MYHTML;
         strokeOpacity: 1,
         strokeWeight: 3,
         fillColor: '#BBD8E9',
-        fillOpacity: 0.6
+        fillOpacity: 0.7
       });
         
       polygon_dun = map.drawPolygon({
@@ -211,21 +227,58 @@ MYHTML;
         strokeOpacity: 1,
         strokeWeight: 3,
         fillColor: '#FFD8E9',
-        fillOpacity: 0.6
+        fillOpacity: 0.8
       });
 
       polygon_dm = map.drawPolygon({
         paths: paths_dm,
         useGeoJSON: true,
-        strokeColor: '#88D8E9',
+        strokeColor: '#ED2A40',
         strokeOpacity: 1,
         strokeWeight: 3,
-        fillColor: '#88D8E9',
-        fillOpacity: 0.6
+        fillColor: '#F25C6D',
+        fillOpacity: 0.9
       });
     
-        
-    });
+          
+   // Bind to the relevant actions here .. using the available polygin_x ..
+   $("a#togglepar").click(function() {
+     // Toggle visibility behavior ..
+     if (polygon.getVisible()) {
+       polygon.setVisible(false);
+     } else {
+       polygon.setVisible(true);         
+     }
+   }); // END click
+
+   $("a#toggleare").click(function() {
+     // Toggle visibility behavior ..
+     if (polygon_are.getVisible()) {
+       polygon_are.setVisible(false);
+     } else {
+       polygon_are.setVisible(true);         
+     }
+   }); // END click_are
+
+   $("a#toggledun").click(function() {
+     // Toggle visibility behavior ..
+     if (polygon_dun.getVisible()) {
+       polygon_dun.setVisible(false);
+     } else {
+       polygon_dun.setVisible(true);         
+     }
+   }); // END click_dun
+
+   $("a#toggledm").click(function() {
+     // Toggle visibility behavior ..
+     if (polygon_dm.getVisible()) {
+       polygon_dm.setVisible(false);
+     } else {
+       polygon_dm.setVisible(true);         
+     }
+   }); // END click_dm
+                
+  });  // END onReady
   </script>
         
 TEMPLATE;
@@ -270,18 +323,22 @@ TEMPLATE;
                 switch ($type) {
                     case 'url':
                         $mapit_details .= "<br/> URL: " . '<a href="' . $value['name'] . '" >' . $value['name'] . '</a>';
-                        break;                        
+                        break;
                     case 'par':
-                        $mapit_details .= "<br/> PAR: " . $value['name'];
+                        $mapit_details .= "<br/> PAR: " . $value['name'] .
+                                ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle PAR</a>');
                         break;
                     case 'dun':
-                        $mapit_details .= "<br/> DUN: " . $value['name'];
+                        $mapit_details .= "<br/> DUN: " . $value['name'] .
+                                ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle DUN</a>');
                         break;
                     case 'dm':
-                        $mapit_details .= "<br/> DM: " . $value['name'];
+                        $mapit_details .= "<br/> DM: " . $value['name'] .
+                                ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle DM</a>');
                         break;
                     case 'are':
-                        $mapit_details .= "<br/> ARE: " . $value['name'];
+                        $mapit_details .= "<br/> ARE: " . $value['name'] .
+                                ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle AREA</a>');
                         break;
 
                     default:

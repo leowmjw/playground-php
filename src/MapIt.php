@@ -52,6 +52,12 @@ class MapIt implements MapItInterface {
 
         // Initialized the needed
         $adapter = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+        // Initialized all the needed; if no data is returned, leave it as an empty list
+        $this->mapit_view_model['par']['polygon'] = "[]";
+        $this->mapit_view_model['dun']['polygon'] = "[]";
+        $this->mapit_view_model['dm']['polygon'] = "[]";
+        $this->mapit_view_model['are']['polygon'] = "[]";
+
         // echo $this->dumpMapitUrl($result) . "<br/><br/>";
         $mapit_results = json_decode($adapter->getContent($this->dumpMapitUrl($result)), true);
         // Categorize to the correct buckets ..
