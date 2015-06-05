@@ -94,9 +94,9 @@ class Controller {
     <h3>Parliament (PAR) + State Assembly (DUN) + Voting District (DM) Maps</h3>
     <div class="row">
       <div class="span11">
-        <div class="popin">
-          <div id="map"></div>
-        </div>
+        Check your information against Electoral Commision data, compared with 
+        the TindakMalaysia volunteer Delimitation work (<a href="http//www.tindakmalaysia.org">tindakmalaysia.org</a>)
+        (served to you by MapIt from <a href="http://www.sinarproject.org">Sinar Project</a>)          
       </div>
     </div>
     <div>$mymessage</div>

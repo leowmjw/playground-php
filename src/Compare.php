@@ -176,7 +176,8 @@ MYHTML;
         $coordinates_dun = $mapit_point['dun']['polygon'];
         $coordinates_dm = $mapit_point['dm']['polygon'];
         $coordinates_are = $mapit_point['are']['polygon'];
-
+        // Voter Full Address
+        $voter_full_address = array_pop($this->voter->getLocations());
         // Use dumb output first ..
         $template = <<<TEMPLATE
   <script type="text/javascript">
@@ -195,6 +196,16 @@ MYHTML;
         lng: $coordinates_lng
       });
 
+      location_marker = map.addMarker({
+        lat: $coordinates_lat,
+        lng: $coordinates_lng,
+        title: 'Voters Location',
+        draggable: true,        
+        infoWindow: {
+          content: '<p>$voter_full_address</p>'
+        }
+      });
+                
       var paths = $coordinates_par;
       var paths_dun = $coordinates_dun;
       var paths_dm = $coordinates_dm;
@@ -217,7 +228,7 @@ MYHTML;
         strokeOpacity: 1,
         strokeWeight: 3,
         fillColor: '#BBD8E9',
-        fillOpacity: 0.7
+        fillOpacity: 0.5
       });
         
       polygon_dun = map.drawPolygon({
@@ -227,7 +238,7 @@ MYHTML;
         strokeOpacity: 1,
         strokeWeight: 3,
         fillColor: '#FFD8E9',
-        fillOpacity: 0.8
+        fillOpacity: 0.6
       });
 
       polygon_dm = map.drawPolygon({
@@ -237,7 +248,7 @@ MYHTML;
         strokeOpacity: 1,
         strokeWeight: 3,
         fillColor: '#F25C6D',
-        fillOpacity: 0.9
+        fillOpacity: 0.7
       });
     
           

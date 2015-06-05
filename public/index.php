@@ -43,6 +43,19 @@ $router->get('/', function(Request $myrequest, Response $myresponse) use ($myreq
     return $myresponse;
 });
 
+// MapIt Example application; putting map based on postcode; to display a MapIt data 
+$router->get('/mapit', function(Request $myrequest, Response $myresponse) use ($myrequest, $myresponse, $apiKey) {
+    // Query extraction raw ..
+    // $apiKey = $_ENV['GOOGLE_API_KEY'];
+    $mypostcode = $myrequest->get('postcode');
+    $postcodemapit_controller = new \EC\ControllerPostcodeMapIt($apiKey, $mypostcode);
+    // Return the generated response to be sent back ..
+    // Test view model ..
+    $myresponse->setContent($postcodemapit_controller);
+    // $myresponse->setContent($postcodemapit_controller->render());
+    return $myresponse;
+});
+
 $router->get('/compare', function(Request $myrequest, Response $myresponse) use ($myrequest, $myresponse) {
     $apiKey = $_ENV['GOOGLE_API_KEY'];
     // echo "APIKEY is: $apiKey <br/><br/>";
@@ -64,8 +77,8 @@ $router->get('/compare', function(Request $myrequest, Response $myresponse) use 
     $display['input']['address'] = htmlentities($myaddress);
     // CReate the needed pre-reqs; any failure gets marked
     // Dummy tests below; should be further to be injected in ..
-    // $ec_site = new \EC\ECSiteDummy($myic);
-    $ec_site = new \EC\ECSite($myic);
+    $ec_site = new \EC\ECSiteDummy($myic);
+    // $ec_site = new \EC\ECSite($myic);
     if (empty($ec_site->getLabels())) {
         // Mark in UI structure
         // var_dump($display);
