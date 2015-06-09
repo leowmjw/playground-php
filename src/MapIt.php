@@ -52,6 +52,12 @@ class MapIt implements MapItInterface {
 
         // Initialized the needed
         $adapter = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+        // Initialized all the needed; if no data is returned, leave it as an empty list
+        $this->mapit_view_model['par']['polygon'] = "[]";
+        $this->mapit_view_model['dun']['polygon'] = "[]";
+        $this->mapit_view_model['dm']['polygon'] = "[]";
+        $this->mapit_view_model['are']['polygon'] = "[]";
+
         // echo $this->dumpMapitUrl($result) . "<br/><br/>";
         $mapit_results = json_decode($adapter->getContent($this->dumpMapitUrl($result)), true);
         // Categorize to the correct buckets ..
@@ -132,7 +138,10 @@ class MapIt implements MapItInterface {
 
     protected function dumpMapitUrl(ResultInterface $result) {
         $sinar_mapit_base_url = "http://mapit.sinarproject.org/point/4326/";
-        return $sinar_mapit_base_url . $result->getLongitude() . "," . $result->getLatitude();
+        $sinar_mapit_url = $sinar_mapit_base_url . $result->getLongitude() . "," . $result->getLatitude();
+        // For debugging purposes; SEO too??
+        $this->mapit_view_model['url']['name'] = $sinar_mapit_url;
+        return $sinar_mapit_url;
     }
 
     protected function extractCoordinates($geojson_output) {
