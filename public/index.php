@@ -51,8 +51,8 @@ $router->get('/mapit', function(Request $myrequest, Response $myresponse) use ($
     $postcodemapit_controller = new \EC\ControllerPostcodeMapIt($apiKey, $mypostcode);
     // Return the generated response to be sent back ..
     // Test view model ..
-    $myresponse->setContent($postcodemapit_controller);
-    // $myresponse->setContent($postcodemapit_controller->render());
+    // $myresponse->setContent($postcodemapit_controller);
+    $myresponse->setContent($postcodemapit_controller->render());
     return $myresponse;
 });
 
@@ -159,8 +159,8 @@ try {
     // Send off all the contnt ..
     $response->send();
 } catch (League\Route\Http\Exception $hexec) {
-    echo $hexec->getMessage();
-    echo "Ack; HTTP Exception!!";
+    echo "ERROR:" . $hexec->getMessage() . "<br/><br/>";
+    echo 'Sorry; try <a href="/">/</a> or <a href="/mapit">/mapit</a>?';
 } catch (Exception $exc) {
     echo nl2br($exc->getTraceAsString()) . "<br/><br/>";
     // Some some page; based on what criteria; and strategy??
