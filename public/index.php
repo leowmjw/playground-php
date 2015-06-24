@@ -77,8 +77,8 @@ $router->get('/compare', function(Request $myrequest, Response $myresponse) use 
     $display['input']['address'] = htmlentities($myaddress);
     // CReate the needed pre-reqs; any failure gets marked
     // Dummy tests below; should be further to be injected in ..
-    $ec_site = new \EC\ECSiteDummy($myic);
-    // $ec_site = new \EC\ECSite($myic);
+    // $ec_site = new \EC\ECSiteDummy($myic);
+    $ec_site = new \EC\ECSite($myic);
     if (empty($ec_site->getLabels())) {
         // Mark in UI structure
         // var_dump($display);
