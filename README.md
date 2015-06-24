@@ -34,6 +34,7 @@ Development Environment Setup
    Otherwise, likely the Google Geocode call will fail.  Debug using tools below ..
 
 1) Get Docker
+
     a) OSX, Mac: Use Kitematic; it is awesome!! --> https://kitematic.com/
     b) Windows: Kitematci coming soon! --> https://blog.docker.com/2015/06/kitematic-windows-alpha/
 
@@ -54,6 +55,7 @@ Development Environment Setup
 ```
 
 3) Ensure containers is setup to handle PHP and with the correct VirtualHosts
+
     a) From within the "ec-php" container; use Composer to get the needed vendor libs
 ```
 
@@ -99,6 +101,7 @@ ec-php# .... << vendor libs getting installed >> ..
 ```
 
 4) Test!
+
    a) Scenario #1: http://ec.192.168.99.100.xip.io/
    b) Scenario #2: http://ec.192.168.99.100.xip.io/mapit
    c) If EC site seems slow; enable injection of Dummy data by modifying the 
@@ -113,12 +116,14 @@ ec-php# .... << vendor libs getting installed >> ..
 
 Debugging Tools
 ===============
+
 1) Debug Raw EC data --> http://ec.192.168.99.100.xip.io/ec-process-daftar.php
 2) Debug Raw MapIt data --> http://ec.192.168.99.100.xip.io/ec-process-mapit.php
 3) Debug UI/UX mock --> http://ec.192.168.99.100.xip.io/ec-parse-mapit-result-test.php
 
 What's Next?
 ==============
+
 1) Try a more modern UI using ReactJS --> http://facebook.github.io/react/
 2) Refactor code; and add better tests using Codeception --> http://codeception.com/
 3) Add libraries so facilitate integration with PopIt; using the documented API 
