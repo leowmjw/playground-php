@@ -118,7 +118,7 @@ class Compare implements CompareInterface {
 </html>        
 MYHTML;
 
-        if ($display['error']) {
+        if (isset($display['error'])) {
             return "FAIL!!! Data dump as follows: " . print_r($display, true);
         }
 
@@ -143,7 +143,7 @@ MYHTML;
                 return $view;
             } else {
                 // var_dump($result);
-                // echo $result->getExceptionMessage();
+                echo $result->getExceptionMessage();
             }
         }
     }
@@ -177,7 +177,8 @@ MYHTML;
         $coordinates_dm = $mapit_point['dm']['polygon'];
         $coordinates_are = $mapit_point['are']['polygon'];
         // Voter Full Address
-        $voter_full_address = array_pop($this->voter->getLocations());
+        $possible_addresses = $this->voter->getLocations();
+        $voter_full_address = array_pop($possible_addresses);
         // Use dumb output first ..
         $template = <<<TEMPLATE
   <script type="text/javascript">

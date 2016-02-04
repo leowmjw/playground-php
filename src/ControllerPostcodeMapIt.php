@@ -7,15 +7,18 @@ namespace EC;
  *
  * @author leow
  */
-class ControllerPostcodeMapIt {
+class ControllerPostcodeMapIt
+{
 
     private $key_api;
     private $voter_location;
     private $display = array();
     private $geocoder_results;
     private $view_model = array();
+    private $postcode;
 
-    public function __construct($key_api, $postcode) {
+    public function __construct($key_api, $postcode)
+    {
         if (null === $this->key_api) {
             $this->key_api = $key_api;
         }
@@ -44,13 +47,15 @@ class ControllerPostcodeMapIt {
         }
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         // print what out 
         $this->processData();
         return json_encode($this->view_model);
     }
 
-    public function render() {
+    public function render()
+    {
         // process Data; anything to catch??  How to test??
         $this->processData();
         // render needed components ..
@@ -60,14 +65,17 @@ class ControllerPostcodeMapIt {
     }
 
     // Protected FUnctions ..
-    protected function geoCodeLookupLocation() {
+    protected function geoCodeLookupLocation()
+    {
         if (null === $this->geocoder_results) {
             // Get all the needed for Geocode
             $geocoder = new \Geocoder\Geocoder();
             $adapter = new \Geocoder\HttpAdapter\CurlHttpAdapter();
             $geotools = new \League\Geotools\Geotools();
             // Execute geocode on possible addresses
-            $geocoder->registerProvider(new \Geocoder\Provider\GoogleMapsProvider($adapter, null, "my", true, $key_api));
+            $geocoder->registerProvider(
+                new \Geocoder\Provider\GoogleMapsProvider($adapter, null, "my", true, $this->key_api)
+            );
             try {
                 $this->geocoder_results = $geotools->batch($geocoder)->geocode($this->voter_location->getPossibleAddresses())->parallel();
                 // echo "Number of results: " . count($results) . "<br/><br/>";
@@ -80,7 +88,8 @@ class ControllerPostcodeMapIt {
         }
     }
 
-    protected function processData() {
+    protected function processData()
+    {
         if (!empty($this->geocoder_results)) {
             // die(var_dump($this->geocoder_results));
             // Only do something if there are geocoder results ..
@@ -105,12 +114,14 @@ class ControllerPostcodeMapIt {
         }
     }
 
-    protected function renderTemplate() {
+    protected function renderTemplate()
+    {
         // Based on the different view; should pull out different content pieces ..??
         // Initis ..
         $finalized_mapit_output = "";
         $finalized_polygon = "";
         $finalized_mapit_map = "";
+        $postcode_error = "";
         // AUto-fill input fields
         if (!empty($this->display['input'])) {
             foreach ($this->display['input'] as $key => $value) {
@@ -118,7 +129,7 @@ class ControllerPostcodeMapIt {
                     case 'postcode':
                         $mypostcode = $value;
                         break;
-                    
+
                     case 'error':
                         foreach ($value as $error_category => $error_message) {
                             switch ($error_category) {
@@ -138,7 +149,7 @@ class ControllerPostcodeMapIt {
         }
         // Default: No error; do nothing
         $finalized_error_bar = "";
-        if ($this->display['error']) {
+        if (isset($this->display['error'])) {
             $finalized_error_bar = $this->renderErrorContent();
         }
         // View variable should be in display['output']['view']??
@@ -195,12 +206,14 @@ MYHTML;
         return $finalized_html;
     }
 
-    protected function renderErrorContent() {
+    protected function renderErrorContent()
+    {
         $error_message = $this->display['output']['error']['message'];
         return '<div style="color:#FF1919"><strong>' . $error_message . '</strong></div>';
     }
 
-    protected function renderMapItContent() {
+    protected function renderMapItContent()
+    {
 
         // Here's the polygon snippet
         $rendered_mapit_content['polygon'] = $this->renderPolygon();
@@ -227,7 +240,8 @@ HTMLOUTPUT;
         return $rendered_mapit_content;
     }
 
-    protected function renderPolygon() {
+    protected function renderPolygon()
+    {
         // Data form the processed view model; should check if it is run wrongly with no data?? 
         $mapit_point = $this->view_model;
         // Or maybe if empty; then don't show anything??
@@ -242,7 +256,8 @@ HTMLOUTPUT;
         $coordinates_dm = $mapit_point['dm']['polygon'];
         $coordinates_are = $mapit_point['are']['polygon'];
         // Voter Full Address
-        $voter_full_address = array_pop($this->voter_location->getPossibleAddresses());
+        $possible_addresses = $this->voter_location->getPossibleAddresses();
+        $voter_full_address = array_pop($possible_addresses);
         // Use dumb output first ..
 
         $rendered_mapit_polygon = <<<HTMLPOLYGON

@@ -1,2 +1,4 @@
+/.bundle
+/composer.phar
 /vendor/
 /env

@@ -59,7 +59,15 @@ class Controller {
                 }
             }
         }
+        // Init
+        $myic = "";
+        $ic_error = "";
+        $mypostcode = "";
+        $postcode_error = "";
+        $myaddress = "";
+        $address_error = "";
         // Centralize the tag in the given lng, lat?
+        $finalized_polygon = "";
         $finalized_html = <<<MYHTML
 
 <!DOCTYPE html>
@@ -106,7 +114,7 @@ class Controller {
 </html>        
 MYHTML;
 
-        if ($display['error']) {
+        if (isset($display['error'])) {
             // return "FAIL!!! Data dump as follows: " . print_r($display, true);
         }
 
