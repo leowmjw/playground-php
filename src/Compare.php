@@ -9,12 +9,14 @@ namespace EC;
  *
  * @author leow
  */
-class Compare implements CompareInterface {
+class Compare implements CompareInterface
+{
 
     private $geocoder_results = null;
     private $voter = null;
 
-    public function __construct($apiKey, \EC\ECSiteInterface $ec_site, \EC\VoterLocationInterface $voter_location) {
+    public function __construct($apiKey, \EC\ECSiteInterface $ec_site, \EC\VoterLocationInterface $voter_location)
+    {
         // TODO: Actually; corectly is to pass in voter interface ..
         // TODO: STub out HtpAdapter and Provider?? to be able to mock in data ?
         if (null === $this->geocoder_results) {
@@ -43,15 +45,18 @@ class Compare implements CompareInterface {
         }
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return print_r($this->dooDah($this->geocoder_results), true);
     }
 
-    public function getJSSnippet() {
-        
+    public function getJSSnippet()
+    {
+
     }
 
-    public function render($display) {
+    public function render($display)
+    {
         // INput Data {{ $display['input'] }}
         // EC Data inside voter? {{ $display['output']['voter'] }}
         //  ----> [par]/[ic]..
@@ -125,7 +130,8 @@ MYHTML;
         return $finalized_html;
     }
 
-    public function view() {
+    public function view()
+    {
         // form template ..
         // Init
         $view = array();
@@ -150,7 +156,8 @@ MYHTML;
 
     //put your code here
     // Protected
-    protected function dooDah($results) {
+    protected function dooDah($results)
+    {
         // Data from Mapit
         $mapit = new \EC\MapIt();
         // Dump out the needed MapIt URLs ..
@@ -165,7 +172,8 @@ MYHTML;
         }
     }
 
-    protected function renderPolygon($mapit_point) {
+    protected function renderPolygon($mapit_point)
+    {
         // MapIt Data {{ $display['output']['mapit'] }}
         //  ----> [lat]/[lng]
         //  ----> [par][polygon]
@@ -297,7 +305,8 @@ TEMPLATE;
         return $template;
     }
 
-    protected function renderECDetail($voter_output) {
+    protected function renderECDetail($voter_output)
+    {
         // EC Data inside voter? {{ $display['output']['voter'] }}
         //  ----> [par]/[ic]..
         if (empty($voter_output)) {
@@ -324,7 +333,8 @@ TEMPLATE;
         return $template;
     }
 
-    protected function renderMapItDetail($mapit_output) {
+    protected function renderMapItDetail($mapit_output)
+    {
         // MapIt Data {{ $display['output']['mapit'] }}
         //  ----> [par][name]
         if (empty($mapit_output)) {
@@ -338,19 +348,19 @@ TEMPLATE;
                         break;
                     case 'par':
                         $mapit_details .= "<br/> PAR: " . $value['name'] .
-                                ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle PAR</a>');
+                            ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle PAR</a>');
                         break;
                     case 'dun':
-                        $mapit_details .= "<br/> DUN: " . $value['name'] .
-                                ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle DUN</a>');
+                        $mapit_details .= "<br/> DUN: " . (isset($value['name']) ? $value['name'] : '');
+                        $mapit_details .= (!isset($value['name']) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle DUN</a>');
                         break;
                     case 'dm':
                         $mapit_details .= "<br/> DM: " . $value['name'] .
-                                ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle DM</a>');
+                            ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle DM</a>');
                         break;
                     case 'are':
                         $mapit_details .= "<br/> ARE: " . $value['name'] .
-                                ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle AREA</a>');
+                            ((empty($value['name'])) ? '' : '  <a id="toggle' . $type . '" href="javascript:;">Toggle AREA</a>');
                         break;
 
                     default:

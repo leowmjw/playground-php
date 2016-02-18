@@ -34,7 +34,7 @@ $myresponse = new Response();
 // Get Route Collections ..
 $router = new League\Route\RouteCollection;
 
-$router->get('/', function(Request $myrequest, Response $myresponse) use ($myrequest, $myresponse) {
+$router->get('/', function (Request $myrequest, Response $myresponse) use ($myrequest, $myresponse) {
     // $myresponse->setContent("In / <br/><br/> Data: " . print_r($myrequest->query->all(), true));
     $mymessage = print_r($myrequest->query->all(), true);
     $display['message'] = $mymessage;
@@ -43,8 +43,27 @@ $router->get('/', function(Request $myrequest, Response $myresponse) use ($myreq
     return $myresponse;
 });
 
+// Api endpoint to process all that is needed ..
+$router->get('/api', function (Request $myrequest, Response $myresponse) use ($myrequest, $myresponse) {
+
+    switch ($myrequest->query->get("myaction")) {
+        case 'location':
+            break;
+
+        default:
+            break;
+
+    }
+
+
+    $api_controller = new \EC\ControllerApi();
+    $myresponse->setStatusCode(Response::HTTP_NOT_FOUND);
+    $myresponse->setContent($api_controller->getResult());
+    return $myresponse;
+});
+
 // MapIt Example application; putting map based on postcode; to display a MapIt data 
-$router->get('/mapit', function(Request $myrequest, Response $myresponse) use ($myrequest, $myresponse, $apiKey) {
+$router->get('/mapit', function (Request $myrequest, Response $myresponse) use ($myrequest, $myresponse, $apiKey) {
     // Query extraction raw ..
     // $apiKey = $_ENV['GOOGLE_API_KEY'];
     $mypostcode = $myrequest->get('postcode');
@@ -56,7 +75,7 @@ $router->get('/mapit', function(Request $myrequest, Response $myresponse) use ($
     return $myresponse;
 });
 
-$router->get('/compare', function(Request $myrequest, Response $myresponse) use ($myrequest, $myresponse) {
+$router->get('/compare', function (Request $myrequest, Response $myresponse) use ($myrequest, $myresponse) {
     $apiKey = $_ENV['GOOGLE_API_KEY'];
     // echo "APIKEY is: $apiKey <br/><br/>";
     $myic = $myrequest->get('ic');
@@ -77,8 +96,8 @@ $router->get('/compare', function(Request $myrequest, Response $myresponse) use 
     $display['input']['address'] = htmlentities($myaddress);
     // CReate the needed pre-reqs; any failure gets marked
     // Dummy tests below; should be further to be injected in ..
-    // $ec_site = new \EC\ECSiteDummy($myic);
-    $ec_site = new \EC\ECSite($myic);
+    $ec_site = new \EC\ECSiteDummy($myic);
+    // $ec_site = new \EC\ECSite($myic);
     if (empty($ec_site->getLabels())) {
         // Mark in UI structure
         // var_dump($display);
