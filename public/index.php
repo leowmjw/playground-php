@@ -57,7 +57,9 @@ $router->get('/api', function (Request $myrequest, Response $myresponse) use ($m
 
 
     $api_controller = new \EC\ControllerApi();
-    $myresponse->setStatusCode(Response::HTTP_NOT_FOUND);
+    // If 404 then do this!!
+    // $myresponse->setStatusCode(Response::HTTP_NOT_FOUND);
+    $myresponse->headers->set('Access-Control-Allow-Origin','http://localhost:4444');
     $myresponse->setContent($api_controller->getResult());
     return $myresponse;
 });
