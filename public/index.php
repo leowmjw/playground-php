@@ -46,21 +46,31 @@ $router->get('/', function (Request $myrequest, Response $myresponse) use ($myre
 // Api endpoint to process all that is needed ..
 $router->get('/api', function (Request $myrequest, Response $myresponse) use ($myrequest, $myresponse) {
 
+    $api_controller = new \EC\ControllerApi();
+    $myresponse->headers->set('Access-Control-Allow-Origin', 'http://localhost:4444');
+
     switch ($myrequest->query->get("myaction")) {
         case 'location':
+            // Get the needed params
+            $lat = $myrequest->query->get("lat");
+            $lng = $myrequest->query->get("lng");
+            // Happy Path .. nothing happens
+            // Simulate Unhappy path?? lat or lng empty ..
+            // Uncomment below
+            // $lat = "";
+            $myresponse->setContent($api_controller->getResultofLocation($lat, $lng));
             break;
 
         default:
+            $myresponse->setContent($api_controller->getResult());
+            // To simulate Sad Path; uncomment below; need to uncomment above?
+            // If 404 then do this!!
+            // $myresponse->setStatusCode(Response::HTTP_NOT_FOUND);
             break;
 
     }
 
 
-    $api_controller = new \EC\ControllerApi();
-    // If 404 then do this!!
-    // $myresponse->setStatusCode(Response::HTTP_NOT_FOUND);
-    $myresponse->headers->set('Access-Control-Allow-Origin','http://localhost:4444');
-    $myresponse->setContent($api_controller->getResult());
     return $myresponse;
 });
 

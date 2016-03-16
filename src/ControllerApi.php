@@ -18,6 +18,7 @@ class ControllerApi
      * @var
      */
     private $token;
+    private $mapit_output_point;
 
     /**
      * @return mixed
@@ -47,14 +48,8 @@ class ControllerApi
      */
     public final function getResult()
     {
-        return $this->getBreakdown();
-    }
-
-    private function getBreakdown()
-    {
-        // Get this from initial call to the location ..
-        // can filter on particular items;
-        $geojson_output = <<< MYGEOJSON
+        // Static fixed data ..
+        $this->mapit_output_point = <<< MYGEOJSON
 
 {
     "6801": {
@@ -141,6 +136,35 @@ class ControllerApi
 
 MYGEOJSON;
 
+        return $this->getBreakdown();
+    }
+
+    public final function getResultofLocation($lat, $lng)
+    {
+        // Ensure there is pre-reqs .. try this??
+        if (empty($lat) || empty($lng)) {
+            // FAILED; get kicked out!!
+            return "{}";
+        }
+        // Call Mapit using Lat,Lng to get details
+        // TODO: COnvert this to injection via ENV?? Just liek the CORS ..
+        $sinar_mapit_base_url = "http://mapit.sinarproject.org/point/4326/";
+        $sinar_mapit_url = $sinar_mapit_base_url . $lng . "," . $lat;
+        // No need to decode it; will be decoded when it gets to getBreakdown
+        // Initialized the needed
+        $adapter = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+        // Get content via Curl
+        $this->mapit_output_point =  $adapter->getContent($sinar_mapit_url);
+
+        return $this->getBreakdown();
+    }
+
+    private function getBreakdown()
+    {
+        // Get this from initial call to the location ..
+        // can filter on particular items;
+        $geojson_output = $this->mapit_output_point;
+
         // Init
         $coordinates = "";
         $coordinates_par = "";
@@ -201,15 +225,18 @@ MYGEOJSON;
         return "{}";
     }
 
-    private function getLocation($postcode, $address = null) {
+    private function getLocation($postcode, $address = null)
+    {
 
     }
 
-    private function getMapItDetails($location) {
+    private function getMapItDetails($location)
+    {
 
     }
 
-    private function getECDetails($ic_number) {
+    private function getECDetails($ic_number)
+    {
 
     }
 
