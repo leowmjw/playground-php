@@ -47,6 +47,7 @@ $router->get('/', function (Request $myrequest, Response $myresponse) use ($myre
 $router->get('/api', function (Request $myrequest, Response $myresponse) use ($myrequest, $myresponse) {
 
     $api_controller = new \EC\ControllerApi();
+    $myresponse->headers->set('Content-Type','application/json');
     $myresponse->headers->set('Access-Control-Allow-Origin', 'http://localhost:4444');
 
     switch ($myrequest->query->get("myaction")) {
